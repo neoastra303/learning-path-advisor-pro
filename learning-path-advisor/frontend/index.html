@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Learning Path Advisor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Advanced Learning Path Advisor</h1>
+            <p>Get personalized recommendations for your learning journey with AI-powered insights</p>
+            <nav class="mobile-nav">
+                <button class="nav-btn" data-section="user-progress">Progress</button>
+                <button class="nav-btn" data-section="path-planning">Path</button>
+                <button class="nav-btn" data-section="recommendation">Recommend</button>
+                <button class="nav-btn" data-section="course-details">Courses</button>
+            </nav>
+        </header>
+
+        <div id="summary-bar" class="summary-bar">
+            <div class="summary-item"><span class="summary-label">Goal:</span> <span id="summary-goal">None selected</span></div>
+            <div class="summary-item"><span class="summary-label">Style:</span> <span id="summary-style">Balanced</span></div>
+            <div class="summary-item"><span class="summary-label">Risk:</span> <span id="summary-risk">0.5</span></div>
+            <div class="summary-item"><span class="summary-label">Completed:</span> <span id="summary-completed">0 courses</span></div>
+        </div>
+
+        <main>
+            <!-- User Progress Section -->
+            <section id="user-progress" class="panel">
+                <h2>📊 Your Learning Progress</h2>
+                <div class="input-group">
+                    <label for="completed-courses">Completed Courses:</label>
+                    <div id="completed-courses-container">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <button id="add-course-btn" class="btn-secondary">➕ Add Completed Course</button>
+                </div>
+            </section>
+
+            <!-- Path Planning Section -->
+            <section id="path-planning" class="panel">
+                <h2>🗺️ Find Optimal Learning Path</h2>
+                <div class="input-group">
+                    <label for="goal-course">🎯 Goal Course:</label>
+                    <select id="goal-course">
+                        <option value="">Select your goal course</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="learning-style">🎓 Learning Style:</label>
+                    <select id="learning-style">
+                        <option value="balanced">Balanced (Recommended)</option>
+                        <option value="fastest">Fastest Path</option>
+                        <option value="easiest">Easiest Path</option>
+                        <option value="challenging">Most Challenging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="path-algorithm">⚙️ Pathfinding Algorithm:</label>
+                    <select id="path-algorithm">
+                        <option value="dijkstra">Dijkstra (weighted shortest path)</option>
+                        <option value="bfs">BFS (fewest steps)</option>
+                        <option value="astar">A* (requires heuristic, experimental)</option>
+                    </select>
+                </div>
+                <div class="input-group advanced-options">
+                    <label>Advanced Cost Weights (optional):</label>
+                    <div class="weight-grid">
+                        <div class="weight-item">
+                            <span>Time</span>
+                            <input type="number" id="weight-time" min="0" max="1" step="0.1" placeholder="auto">
+                        </div>
+                        <div class="weight-item">
+                            <span>Difficulty</span>
+                            <input type="number" id="weight-difficulty" min="0" max="1" step="0.1" placeholder="auto">
+                        </div>
+                        <div class="weight-item">
+                            <span>Utility</span>
+                            <input type="number" id="weight-utility" min="0" max="1" step="0.1" placeholder="auto">
+                        </div>
+                        <div class="weight-item">
+                            <span>Prerequisites</span>
+                            <input type="number" id="weight-prereq" min="0" max="1" step="0.1" placeholder="auto">
+                        </div>
+                    </div>
+                    <small>Leave blank to use smart defaults based on learning style.</small>
+                </div>
+                <button id="find-path-btn" class="btn-primary">🔍 Find Learning Path</button>
+
+                <div id="path-results" class="results hidden">
+                    <h3>Optimal Learning Path:</h3>
+                    <div id="path-display"></div>
+                    <div class="path-cost-row">
+                        <span class="path-cost-label">
+                            Total Cost
+                            <span
+                                class="info-icon"
+                                title="Combined cost based on time, difficulty, utility, and prerequisites. Lower is better."
+                            >?</span>
+                        </span>
+                        <span id="path-cost"></span>
+                    </div>
+                    <div id="path-explanation" class="path-explanation"></div>
+                </div>
+            </section>
+
+            <!-- Course Recommendation Section -->
+            <section id="recommendation" class="panel">
+                <h2>💡 Smart Course Recommendations</h2>
+                <div class="input-group">
+                    <label for="decision-strategy">Decision Strategy:</label>
+                    <select id="decision-strategy">
+                        <option value="meu">Maximum Expected Utility (MEU)</option>
+                        <option value="minimax">Minimax (Risk-averse)</option>
+                        <option value="evk">EVK (Risk-adjusted exploration)</option>
+                    </select>
+                </div>
+                <button id="get-recommendation-btn" class="btn-primary">📋 Get Recommendations</button>
+
+                <div id="recommendation-results" class="results hidden">
+                    <h3>Recommended Course:</h3>
+                    <div id="recommendation-display"></div>
+                    <div id="all-options" class="options-grid"></div>
+                </div>
+            </section>
+
+            <!-- Course Details Section -->
+            <section id="course-details" class="panel">
+                <h2>📚 Course Information</h2>
+                <div class="input-group">
+                    <label for="course-name">Course Name:</label>
+                    <select id="course-name">
+                        <option value="">Select a course to view details</option>
+                    </select>
+                </div>
+                <button id="get-course-details-btn" class="btn-primary">📋 Get Course Details</button>
+
+                <div id="course-details-results" class="results hidden">
+                    <div id="course-info"></div>
+                </div>
+            </section>
+            
+            <!-- Career Path Planning Section -->
+            <section id="career-path" class="panel">
+                <h2>💼 Career Path Planning</h2>
+                <div class="input-group">
+                    <label for="target-career">🎯 Target Career:</label>
+                    <select id="target-career">
+                        <option value="">Select your target career</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Software Engineer">Software Engineer</option>
+                        <option value="UI/UX Designer">UI/UX Designer</option>
+                        <option value="Digital Marketer">Digital Marketer</option>
+                        <option value="Product Manager">Product Manager</option>
+                        <option value="Cybersecurity Specialist">Cybersecurity Specialist</option>
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="DevOps Engineer">DevOps Engineer</option>
+                        <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="time-horizon">⏰ Time Horizon (months):</label>
+                    <input type="number" id="time-horizon" value="12" min="1" max="24">
+                </div>
+                <button id="plan-career-path-btn" class="btn-primary">📋 Plan Career Path</button>
+
+                <div id="career-path-results" class="results hidden">
+                    <h3>Career Path Plan:</h3>
+                    <div id="career-path-display"></div>
+                </div>
+            </section>
+
+            <!-- Skill Gap Analysis Section -->
+            <section id="skill-gap" class="panel">
+                <h2>🔍 Skill Gap Analysis</h2>
+                <div class="input-group">
+                    <label for="target-skills">Target Skills (comma-separated):</label>
+                    <input type="text" id="target-skills" placeholder="e.g., Python, Machine Learning, Data Analysis">
+                </div>
+                <button id="analyze-skill-gap-btn" class="btn-primary">📊 Analyze Your Gaps</button>
+
+                <div id="skill-gap-results" class="results hidden">
+                    <h3>Skill Gap Analysis:</h3>
+                    <div id="skill-gap-display"></div>
+                </div>
+            </section>
+            
+            <!-- Learning Progress Tracking Section -->
+            <section id="learning-progress" class="panel">
+                <h2>📈 Learning Progress Dashboard</h2>
+                <div class="input-group">
+                    <label for="start-courses">Starting Courses:</label>
+                    <div id="start-courses-container">
+                        <input type="text" id="start-courses-input" placeholder="Enter your current skill level">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="goal-course-progress">Goal Course:</label>
+                    <select id="goal-course-progress">
+                        <option value="">Select goal course</option>
+                    </select>
+                </div>
+                <button id="get-progress-btn" class="btn-primary">📊 Get Progress Report</button>
+
+                <div id="progress-results" class="results hidden">
+                    <h3>Progress Analysis:</h3>
+                    <div id="progress-display"></div>
+                </div>
+            </section>
+
+            <!-- Course Explorer Section -->
+            <section id="course-explorer" class="panel">
+                <h2>🔍 Course Explorer</h2>
+                <div class="search-filter-container">
+                    <div class="input-group">
+                        <label for="course-search">Search Courses:</label>
+                        <input type="text" id="course-search" placeholder="Search for courses by name, category, or keyword...">
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="input-group">
+                            <label for="category-filter">Category:</label>
+                            <select id="category-filter">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="difficulty-min">Min Difficulty:</label>
+                            <input type="range" id="difficulty-min" min="1" max="10" value="1">
+                            <span id="difficulty-min-value">1</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="difficulty-max">Max Difficulty:</label>
+                            <input type="range" id="difficulty-max" min="1" max="10" value="10">
+                            <span id="difficulty-max-value">10</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="time-filter">Max Time (hours):</label>
+                            <input type="number" id="time-filter" min="1" value="100" placeholder="Max hours">
+                        </div>
+                    </div>
+                    
+                    <button id="apply-filters-btn" class="btn-secondary">Filter Courses</button>
+                </div>
+
+                <div id="course-results" class="results hidden">
+                    <h3>Found Courses:</h3>
+                    <div id="course-grid" class="course-grid"></div>
+                </div>
+            </section>
+
+            <!-- Learning Path Visualization Section -->
+            <section id="path-visualization" class="panel">
+                <h2>🌐 Learning Path Visualization</h2>
+                <div id="path-visual-container" class="path-visual-container">
+                    <div id="path-visual-content">
+                        <p>Learning path visualization will appear here after you find a path.</p>
+                    </div>
+                </div>
+                <button id="export-path-btn" class="btn-secondary">Export Learning Path</button>
+            </section>
+
+            <!-- Progress Dashboard Section -->
+            <section id="progress-dashboard" class="panel">
+                <h2>📊 Progress Dashboard</h2>
+                <div id="dashboard-content">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3 id="courses-completed">0</h3>
+                            <p>Courses Completed</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="learning-hours">0</h3>
+                            <p>Hours Learned</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="learning-streak">0</h3>
+                            <p>Day Streak</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="achievement-count">0</h3>
+                            <p>Achievements Earned</p>
+                        </div>
+                    </div>
+                    <div id="progress-chart-container">
+                        <canvas id="progress-chart"></canvas>
+                    </div>
+                </div>
+            <!-- Settings Section -->
+            <section id="settings" class="panel">
+                <h2>⚙️ User Preferences</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label for="pref-learning-style">Learning Style Preference:</label>
+                        <select id="pref-learning-style">
+                            <option value="balanced">Balanced</option>
+                            <option value="fastest">Fastest Path</option>
+                            <option value="easiest">Easiest Path</option>
+                            <option value="challenging">Most Challenging</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="pref-risk-tolerance">Risk Tolerance (0-1):</label>
+                        <input type="range" id="pref-risk-tolerance" min="0" max="1" step="0.1" value="0.5">
+                        <span id="risk-tolerance-value">0.5</span>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="pref-theme">Theme:</label>
+                        <select id="pref-theme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto (System)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="pref-email">Email Notifications:</label>
+                        <input type="checkbox" id="pref-email">
+                        <span>Receive progress updates</span>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="pref-goal">Learning Goal:</label>
+                        <input type="text" id="pref-goal" placeholder="e.g., Complete Python track in 3 months">
+                    </div>
+                    
+                    <div class="setting-item full-width">
+                        <button id="save-settings-btn" class="btn-primary">💾 Save Preferences</button>
+                        <button id="reset-progress-btn" class="btn-secondary">🔄 Reset Progress</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Advanced Learning Path Advisor &copy; 2025 | Powered by AI Agents</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
