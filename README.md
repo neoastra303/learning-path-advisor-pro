@@ -801,9 +801,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📊 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/username/goal-planning-aiAgent?style=social)
-![GitHub forks](https://img.shields.io/github/forks/username/goal-planning-aiAgent?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/username/goal-planning-aiAgent?style=social)
+![GitHub stars](https://img.shields.io/github/stars/neoastra303/learning-path-advisor-pro?style=social)
+![GitHub forks](https://img.shields.io/github/forks/neoastra303/learning-path-advisor-pro?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/neoastra303/learning-path-advisor-pro?style=social)
 
 <details>
 <summary><b>📈 Development Activity</b></summary>
@@ -994,7 +994,7 @@ All algorithms and data are self-contained.
 
 If you find this project helpful, please consider giving it a star!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=username/goal-planning-aiAgent&type=Date)](https://star-history.com/#username/goal-planning-aiAgent&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=neoastra303/learning-path-advisor-pro&type=Date)](https://star-history.com/#neoastra303/learning-path-advisor-pro&Date)
 
 ---
 
